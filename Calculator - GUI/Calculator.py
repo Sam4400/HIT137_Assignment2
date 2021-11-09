@@ -1,4 +1,10 @@
 from tkinter import *
+from tkinter import Entry
+
+global stored_num, fnum, math_action
+
+global flag1
+flag1 = False
 
 pad_x = 15
 pad_y = 10
@@ -8,24 +14,150 @@ entry_width = 20
 history_width = 40
 history_height = 60
 
+root = Tk()
+root.title("Computer Science Calculator & Converter")
+
+
+def update_history(num1, act, num2, result):
+    pass
+
+
+def equal_click():
+    cycle_actions()
+    do_math()
+
+    update_conversions()
+
+    global flag1
+    flag1 = True
+
+
+def clear_conversions():
+    hex_value.delete(0, len(hex_value.get()))
+    oct_value.delete(0, len(oct_value.get()))
+    bin_value.delete(0, len(bin_value.get()))
+
+
+def update_conversions():
+    clear_conversions()
+
+    cur_value = int(round(float(inputBox.get())))
+
+    #text = "Decimal Value is - " + str(cur_value)
+    #decv.set(text)
+    text = str(hex(cur_value))
+    hex_value.insert(0,text)
+    hex_value.delete(0,2)
+    text = str(oct(cur_value))
+    oct_value.insert(0,text)
+    oct_value.delete(0,2)
+    text = str(bin(cur_value))
+    bin_value.insert(0,text)
+    bin_value.delete(0,2)
+
+def do_math():
+    finum = float(fnum)
+    snum = float(inputBox.get())
+    clear_input()
+
+    if math_action == '+':
+        res = finum + snum
+        inputBox.insert(0, res)
+    elif math_action == '-':
+        res = finum - snum
+        inputBox.insert(0, res)
+    elif math_action == '*':
+        res = finum * snum
+        inputBox.insert(0, res)
+    elif math_action == '/':
+        res = finum / snum
+        inputBox.insert(0, res)
+
+    update_history(finum,math_action,snum,res)
+
+def store_click():
+    number = float(inputBox.get())
+    global fnum
+    fnum = number
+
+
+def recall_click():
+    clear_input()
+    inputBox.insert(0, stored_num)
+
+
+# <editor-fold desc="Math button functions">
+def action_click():
+    global fnum
+    fnum = inputBox.get()
+    clear_input()
+    cycle_actions()
+
+
+def add_click():
+    global math_action
+    math_action = '+'
+    action_click()
+
+
+def subtract_click():
+    global math_action
+    math_action = '-'
+    action_click()
+
+
+def divide_click():
+    global math_action
+    math_action = '/'
+    action_click()
+
+
+def multiply_click():
+    global math_action
+    math_action = '*'
+    action_click()
+
+
+# </editor-fold>
+
+
+def cycle_actions():
+    if button_add["state"] == "normal":
+        button_add["state"] = "disabled"
+        button_subtract["state"] = "disabled"
+        button_multiply["state"] = "disabled"
+        button_divide["state"] = "disabled"
+    else:
+        button_add["state"] = "normal"
+        button_subtract["state"] = "normal"
+        button_multiply["state"] = "normal"
+        button_divide["state"] = "normal"
+
 
 def number_click(entry):
+    global flag1
+    if flag1:
+        clear_input()
+        flag1 = False
     lenght = len(inputBox.get())
     inputBox.insert(lenght, entry)
+    update_conversions()
 
 
 def clear_click(event):
     inputBox.delete(0, len(inputBox.get()))
+    clear_conversions()
 
-def clear():
+def clear_input():
     inputBox.delete(0, len(inputBox.get()))
+    clear_conversions()
 
 def delete_click(event):
     inputBox.delete(len(inputBox.get()) - 1, len(inputBox.get()))
-
+    update_conversions()
 
 def set_Decimal():
-    clear()
+    clear_input()
 
     button_A["state"] = 'disabled'
     button_B["state"] = 'disabled'
@@ -47,7 +179,7 @@ def set_Decimal():
 
 
 def set_Hex():
-    clear()
+    clear_input()
 
     button_A["state"] = 'normal'
     button_B["state"] = 'normal'
@@ -69,7 +201,7 @@ def set_Hex():
 
 
 def set_Oct():
-    clear()
+    clear_input()
 
     button_A["state"] = 'disabled'
     button_B["state"] = 'disabled'
@@ -91,7 +223,7 @@ def set_Oct():
 
 
 def set_Bin():
-    clear()
+    clear_input()
 
     button_A["state"] = 'disabled'
     button_B["state"] = 'disabled'
@@ -112,24 +244,23 @@ def set_Bin():
     button_9["state"] = 'disabled'
 
 
-root = Tk()
-root.title("Computer Science Calculator & Converter")
-
 base_set = IntVar()
 base_set.set(10)
 
 inputBox = Entry(root)
-inputBox.grid(row=0, column=0, columnspan=6, padx=pad_x, pady=pad_y)
+inputBox.grid(row=0, column=0, columnspan=3, padx=pad_x, pady=pad_y)
+
+ms_button = Button(root, text="Store Value", padx=pad_x, pady=pad_y, command=store_click)
 
 history = Label(root, text="History", relief="ridge", borderwidth=border_width)
 history.grid(row=0, column=5, rowspan=7)
 
 # <editor-fold desc="Create and place action buttons">
-button_equal = Button(root, text="=", padx=pad_x, pady=pad_y)
-button_add = Button(root, text="+", padx=pad_x, pady=pad_y)
-button_subtract = Button(root, text="-", padx=pad_x, pady=pad_y)
-button_multiply = Button(root, text="x", padx=pad_x, pady=pad_y)
-button_divide = Button(root, text="/", padx=pad_x, pady=pad_y)
+button_equal = Button(root, text="=", padx=pad_x, pady=pad_y, command=equal_click)
+button_add = Button(root, text="+", padx=pad_x, pady=pad_y, command=add_click)
+button_subtract = Button(root, text="-", padx=pad_x, pady=pad_y, command=subtract_click)
+button_multiply = Button(root, text="x", padx=pad_x, pady=pad_y, command=multiply_click)
+button_divide = Button(root, text="/", padx=pad_x, pady=pad_y, command=divide_click)
 
 button_clear = Button(root, text="Clear", padx=pad_x, pady=pad_y)
 button_clear.bind("<Button-1>", delete_click)  # On button left click, run function
@@ -190,25 +321,27 @@ button_F.grid(row=2, column=2)
 # </editor-fold>
 
 # <editor-fold desc="Create and place base and value functions">
-Radiobutton(root, text="Decimal", variable=base_set, value=10, command=set_Decimal). \
-    grid(row=0, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Radiobutton(root, text="Hex", variable=base_set, value=16, command=set_Hex). \
+
+'''
+Decimal_value = Label(root, text='Decimal -', relief="ridge", borderwidth=border_width, width=values_width). \
+    grid(row=1, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
+'''
+
+hex_lbl = Label(root, text='Hexadecimal value -', relief="ridge", borderwidth=border_width). \
     grid(row=2, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Radiobutton(root, text="Oct", variable=base_set, value=8, command=set_Oct). \
+oct_lbl = Label(root, text='Octal value - ', relief="ridge", borderwidth=border_width). \
     grid(row=4, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Radiobutton(root, text="Binary", variable=base_set, value=1, command=set_Bin). \
+bin_lbl = Label(root, text='Binary value - ', relief="ridge", borderwidth=border_width). \
     grid(row=6, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 
-Decimal_value = Label(root, text="", relief="ridge", borderwidth=border_width, width=values_width). \
-    grid(row=1, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Hex_value = Label(root, text="", relief="ridge", borderwidth=border_width). \
-    grid(row=3, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Oct_value = Label(root, text="", relief="ridge", borderwidth=border_width). \
-    grid(row=5, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-Bin_value = Label(root, text="", relief="ridge", borderwidth=border_width). \
-    grid(row=7, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-# </editor-fold>
+hex_value = Entry(root)
+hex_value.grid(row=3, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
+oct_value = Entry(root)
+oct_value.grid(row=5, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
+bin_value = Entry(root)
+bin_value.grid(row=7, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 
+# </editor-fold>
 
 
 root.mainloop()
