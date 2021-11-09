@@ -1,9 +1,7 @@
 from tkinter import *
-from tkinter import Entry
 
 global stored_num, fnum, math_action
 
-global flag1
 flag1 = False
 
 pad_x = 15
@@ -43,22 +41,24 @@ def update_conversions():
 
     cur_value = int(round(float(inputBox.get())))
 
-    #text = "Decimal Value is - " + str(cur_value)
-    #decv.set(text)
+    # text = "Decimal Value is - " + str(cur_value)
+    # decv.set(text)
     text = str(hex(cur_value))
-    hex_value.insert(0,text)
-    hex_value.delete(0,2)
+    hex_value.insert(0, text)
+    hex_value.delete(0, 2)
     text = str(oct(cur_value))
-    oct_value.insert(0,text)
-    oct_value.delete(0,2)
+    oct_value.insert(0, text)
+    oct_value.delete(0, 2)
     text = str(bin(cur_value))
-    bin_value.insert(0,text)
-    bin_value.delete(0,2)
+    bin_value.insert(0, text)
+    bin_value.delete(0, 2)
+
 
 def do_math():
     finum = float(fnum)
     snum = float(inputBox.get())
     clear_input()
+    res = 0
 
     if math_action == '+':
         res = finum + snum
@@ -73,7 +73,8 @@ def do_math():
         res = finum / snum
         inputBox.insert(0, res)
 
-    update_history(finum,math_action,snum,res)
+    update_history(finum, math_action, snum, res)
+
 
 def store_click():
     number = float(inputBox.get())
@@ -139,8 +140,8 @@ def number_click(entry):
     if flag1:
         clear_input()
         flag1 = False
-    lenght = len(inputBox.get())
-    inputBox.insert(lenght, entry)
+    length = len(inputBox.get())
+    inputBox.insert(length, entry)
     update_conversions()
 
 
@@ -148,38 +149,22 @@ def clear_click(event):
     inputBox.delete(0, len(inputBox.get()))
     clear_conversions()
 
+
 def clear_input():
     inputBox.delete(0, len(inputBox.get()))
     clear_conversions()
+
 
 def delete_click(event):
     inputBox.delete(len(inputBox.get()) - 1, len(inputBox.get()))
     update_conversions()
 
-def set_Decimal():
+
+# <editor-fold desc="Change Input Base">
+def set_hex():
     clear_input()
 
-    button_A["state"] = 'disabled'
-    button_B["state"] = 'disabled'
-    button_C["state"] = 'disabled'
-    button_D["state"] = 'disabled'
-    button_E["state"] = 'disabled'
-    button_F["state"] = 'disabled'
-
-    button_0["state"] = 'normal'
-    button_1["state"] = 'normal'
-    button_2["state"] = 'normal'
-    button_3["state"] = 'normal'
-    button_4["state"] = 'normal'
-    button_5["state"] = 'normal'
-    button_6["state"] = 'normal'
-    button_7["state"] = 'normal'
-    button_8["state"] = 'normal'
-    button_9["state"] = 'normal'
-
-
-def set_Hex():
-    clear_input()
+    set_decimal()
 
     button_A["state"] = 'normal'
     button_B["state"] = 'normal'
@@ -188,41 +173,30 @@ def set_Hex():
     button_E["state"] = 'normal'
     button_F["state"] = 'normal'
 
-    button_0["state"] = 'normal'
-    button_1["state"] = 'normal'
-    button_2["state"] = 'normal'
-    button_3["state"] = 'normal'
-    button_4["state"] = 'normal'
-    button_5["state"] = 'normal'
-    button_6["state"] = 'normal'
-    button_7["state"] = 'normal'
+
+def set_decimal():
+    clear_input()
+
+    set_oct()
+
     button_8["state"] = 'normal'
     button_9["state"] = 'normal'
 
 
-def set_Oct():
+def set_oct():
     clear_input()
 
-    button_A["state"] = 'disabled'
-    button_B["state"] = 'disabled'
-    button_C["state"] = 'disabled'
-    button_D["state"] = 'disabled'
-    button_E["state"] = 'disabled'
-    button_F["state"] = 'disabled'
+    set_bin()
 
-    button_0["state"] = 'normal'
-    button_1["state"] = 'normal'
     button_2["state"] = 'normal'
     button_3["state"] = 'normal'
     button_4["state"] = 'normal'
     button_5["state"] = 'normal'
     button_6["state"] = 'normal'
     button_7["state"] = 'normal'
-    button_8["state"] = 'disabled'
-    button_9["state"] = 'disabled'
 
 
-def set_Bin():
+def set_bin():
     clear_input()
 
     button_A["state"] = 'disabled'
@@ -232,8 +206,6 @@ def set_Bin():
     button_E["state"] = 'disabled'
     button_F["state"] = 'disabled'
 
-    button_0["state"] = 'normal'
-    button_1["state"] = 'normal'
     button_2["state"] = 'disabled'
     button_3["state"] = 'disabled'
     button_4["state"] = 'disabled'
@@ -246,6 +218,7 @@ def set_Bin():
 
 base_set = IntVar()
 base_set.set(10)
+# </editor-fold>
 
 inputBox = Entry(root)
 inputBox.grid(row=0, column=0, columnspan=3, padx=pad_x, pady=pad_y)
