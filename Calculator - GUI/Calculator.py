@@ -69,7 +69,6 @@ def clear_conversions():
 
 
 def update_conversions():
-
     clear_conversions()
 
     if hex_value["state"] == 'disabled':
@@ -125,7 +124,7 @@ def do_math():
 
     status_bar["state"] = "normal"
 
-    run_time = "That calculation took %s seconds" %(time.time()-start_time)
+    run_time = "That calculation took %s seconds" % (time.time() - start_time)
 
     status_bar.delete(1.0, END)
     status_bar.insert(1.0, run_time)
@@ -187,6 +186,7 @@ def neg_cycle():
         inputBox.delete(0, 1)
     else:
         inputBox.insert(0, '-')
+
 
 # </editor-fold>
 
@@ -332,7 +332,6 @@ button_neg = Button(root, text="+/-", padx=pad_x, pady=pad_y, command=neg_cycle)
 button_0 = Button(root, text="0", padx=pad_x, pady=pad_y, command=lambda: number_click(0))
 button_decimal = Button(root, text=".", padx=pad_x, pady=pad_y, command=lambda: number_click('.'))
 
-
 button_1 = Button(root, text="1", padx=pad_x, pady=pad_y, command=lambda: number_click(1))
 button_2 = Button(root, text="2", padx=pad_x, pady=pad_y, command=lambda: number_click(2))
 button_3 = Button(root, text="3", padx=pad_x, pady=pad_y, command=lambda: number_click(3))
@@ -399,6 +398,6 @@ bin_value.grid(row=7, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 # Status Bar
 
 status_bar = Text(root, bd=1, relief=SUNKEN, height=1, state='disabled')
-status_bar.grid(row=8,column=0, columnspan=6, pady=pad_y, padx=pad_x)
+status_bar.grid(row=8, column=0, columnspan=6, pady=pad_y, padx=pad_x)
 
 root.mainloop()
