@@ -9,15 +9,20 @@ pad_y = 10
 border_width = 3
 values_width = 20
 entry_width = 20
-history_width = 40
-history_height = 60
+history_width = 35
+history_height = 20
 
 root = Tk()
 root.title("Computer Science Calculator & Converter")
 
 
+def clear_history():
+    history_val.delete(1.0,END)
+
+
 def update_history(num1, act, num2, result):
-    pass
+    text = str(num1) + act + str(num2) + '=' + str(result) + '\n'
+    history_val.insert(1.0, text)
 
 
 def equal_click():
@@ -30,14 +35,34 @@ def equal_click():
     flag1 = True
 
 
+def cycle_conversions():
+    if hex_value["state"] == 'disabled':
+        hex_value["state"] = 'normal'
+        oct_value["state"] = 'normal'
+        bin_value["state"] = 'normal'
+    else:
+        hex_value["state"] = 'disabled'
+        oct_value["state"] = 'disabled'
+        bin_value["state"] = 'disabled'
+
+
 def clear_conversions():
+    if hex_value["state"] == 'disabled':
+        cycle_conversions()
+
     hex_value.delete(0, len(hex_value.get()))
     oct_value.delete(0, len(oct_value.get()))
     bin_value.delete(0, len(bin_value.get()))
 
+    cycle_conversions()
+
 
 def update_conversions():
+
     clear_conversions()
+
+    if hex_value["state"] == 'disabled':
+        cycle_conversions()
 
     cur_value = int(round(float(inputBox.get())))
 
@@ -52,6 +77,8 @@ def update_conversions():
     text = str(bin(cur_value))
     bin_value.insert(0, text)
     bin_value.delete(0, 2)
+
+    cycle_conversions()
 
 
 def do_math():
@@ -78,13 +105,14 @@ def do_math():
 
 def store_click():
     number = float(inputBox.get())
-    global fnum
-    fnum = number
+    global stored_num
+    stored_num = number
 
 
 def recall_click():
     clear_input()
     inputBox.insert(0, stored_num)
+    update_conversions()
 
 
 # <editor-fold desc="Math button functions">
@@ -146,17 +174,16 @@ def number_click(entry):
 
 
 def clear_click(event):
-    inputBox.delete(0, len(inputBox.get()))
-    clear_conversions()
+    clear_input()
 
 
 def clear_input():
-    inputBox.delete(0, len(inputBox.get()))
+    inputBox.delete(0, END)
     clear_conversions()
 
 
 def delete_click(event):
-    inputBox.delete(len(inputBox.get()) - 1, len(inputBox.get()))
+    inputBox.delete(len(inputBox.get()) - 1, END)
     update_conversions()
 
 
@@ -225,8 +252,14 @@ inputBox.grid(row=0, column=0, columnspan=3, padx=pad_x, pady=pad_y)
 
 ms_button = Button(root, text="Store Value", padx=pad_x, pady=pad_y, command=store_click)
 
-history = Label(root, text="History", relief="ridge", borderwidth=border_width)
-history.grid(row=0, column=5, rowspan=7)
+history_lbl = Label(root, text="History", relief="ridge", borderwidth=border_width)
+history_lbl.grid(row=0, column=5, rowspan=1, columnspan=1)
+
+history_button = Button(root, text="Clear History", padx=pad_x, pady=pad_y, command=clear_history)
+history_button.grid(row=0, column=6, rowspan=1, columnspan=1)
+
+history_val = Text(root, height=history_height, width=history_width)
+history_val.grid(row=1, column=5, rowspan=6, columnspan=2, padx=pad_x, pady=pad_y)
 
 # <editor-fold desc="Create and place action buttons">
 button_equal = Button(root, text="=", padx=pad_x, pady=pad_y, command=equal_click)
@@ -245,6 +278,12 @@ button_subtract.grid(row=5, column=3)
 button_multiply.grid(row=4, column=3)
 button_divide.grid(row=3, column=3)
 button_clear.grid(row=2, column=3)
+
+button_ms = Button(root, text="MS", padx=pad_x, pady=pad_y, command=store_click)
+button_mr = Button(root, text="MR", padx=pad_x, pady=pad_y, command=recall_click)
+
+button_ms.grid(row=0, column=3)
+button_mr.grid(row=1, column=3)
 # </editor-fold>
 
 # <editor-fold desc="Create and place value buttons">
@@ -293,7 +332,7 @@ button_E.grid(row=2, column=1)
 button_F.grid(row=2, column=2)
 # </editor-fold>
 
-# <editor-fold desc="Create and place base and value functions">
+# <editor-fold desc="Create and place base and value displays">
 
 '''
 Decimal_value = Label(root, text='Decimal -', relief="ridge", borderwidth=border_width, width=values_width). \
@@ -307,11 +346,11 @@ oct_lbl = Label(root, text='Octal value - ', relief="ridge", borderwidth=border_
 bin_lbl = Label(root, text='Binary value - ', relief="ridge", borderwidth=border_width). \
     grid(row=6, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 
-hex_value = Entry(root)
+hex_value = Entry(root, state='disabled')
 hex_value.grid(row=3, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-oct_value = Entry(root)
+oct_value = Entry(root, state='disabled')
 oct_value.grid(row=5, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-bin_value = Entry(root)
+bin_value = Entry(root, state='disabled')
 bin_value.grid(row=7, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 
 # </editor-fold>
