@@ -18,12 +18,22 @@ root.title("Computer Science Calculator & Converter")
 
 
 def clear_history():
+    if history_val["state"] == 'disabled':
+        history_val["state"] = 'normal'
+
     history_val.delete(1.0, END)
+
+    history_val['state'] = 'disabled'
 
 
 def update_history(num1, act, num2, result):
-    text = str(num1) + act + str(num2) + '=' + str(result) + '\n'
+    if history_val["state"] == 'disabled':
+        history_val["state"] = 'normal'
+
+    text = '\n' + str(num1) + act + str(num2) + ' = ' + str(result) + '\n'
     history_val.insert(1.0, text)
+
+    history_val['state'] = 'disabled'
 
 
 def equal_click():
@@ -59,10 +69,15 @@ def clear_conversions():
 
 
 def update_conversions():
+
     clear_conversions()
 
     if hex_value["state"] == 'disabled':
         cycle_conversions()
+
+    if len(inputBox.get()) < 1:
+        cycle_conversions()
+        return
 
     cur_value = int(round(float(inputBox.get())))
 
@@ -85,8 +100,14 @@ def do_math():
     start_time = time.time()
 
     finum = float(fnum)
-    snum = float(inputBox.get())
+
+    if len(inputBox.get()) < 1:
+        snum = 0
+    else:
+        snum = float(inputBox.get())
+
     clear_input()
+
     res = 0
 
     if math_action == '+':
@@ -157,6 +178,15 @@ def multiply_click():
     math_action = '*'
     action_click()
 
+
+def neg_cycle():
+    x = inputBox.get()
+    if len(x) < 1:
+        inputBox.insert(0, '-')
+    elif x[0] == '-':
+        inputBox.delete(0, 1)
+    else:
+        inputBox.insert(0, '-')
 
 # </editor-fold>
 
@@ -298,7 +328,10 @@ button_mr.grid(row=1, column=3)
 # </editor-fold>
 
 # <editor-fold desc="Create and place value buttons">
+button_neg = Button(root, text="+/-", padx=pad_x, pady=pad_y, command=neg_cycle)
 button_0 = Button(root, text="0", padx=pad_x, pady=pad_y, command=lambda: number_click(0))
+button_decimal = Button(root, text=".", padx=pad_x, pady=pad_y, command=lambda: number_click('.'))
+
 
 button_1 = Button(root, text="1", padx=pad_x, pady=pad_y, command=lambda: number_click(1))
 button_2 = Button(root, text="2", padx=pad_x, pady=pad_y, command=lambda: number_click(2))
@@ -320,7 +353,9 @@ button_D = Button(root, text="D", padx=pad_x, pady=pad_y, command=lambda: number
 button_E = Button(root, text="E", padx=pad_x, pady=pad_y, command=lambda: number_click('E'), state='disabled')
 button_F = Button(root, text="F", padx=pad_x, pady=pad_y, command=lambda: number_click('F'), state='disabled')
 
+button_neg.grid(row=7, column=-0)
 button_0.grid(row=7, column=1)
+button_decimal.grid(row=7, column=2)
 
 button_1.grid(row=6, column=0)
 button_2.grid(row=6, column=1)
@@ -344,11 +379,6 @@ button_F.grid(row=2, column=2)
 # </editor-fold>
 
 # <editor-fold desc="Create and place base and value displays">
-
-'''
-Decimal_value = Label(root, text='Decimal -', relief="ridge", borderwidth=border_width, width=values_width). \
-    grid(row=1, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
-'''
 
 hex_lbl = Label(root, text='Hexadecimal value -', relief="ridge", borderwidth=border_width). \
     grid(row=2, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
