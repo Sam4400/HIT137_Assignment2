@@ -1,3 +1,4 @@
+import time
 from tkinter import *
 
 global stored_num, fnum, math_action
@@ -17,7 +18,7 @@ root.title("Computer Science Calculator & Converter")
 
 
 def clear_history():
-    history_val.delete(1.0,END)
+    history_val.delete(1.0, END)
 
 
 def update_history(num1, act, num2, result):
@@ -58,7 +59,6 @@ def clear_conversions():
 
 
 def update_conversions():
-
     clear_conversions()
 
     if hex_value["state"] == 'disabled':
@@ -82,6 +82,8 @@ def update_conversions():
 
 
 def do_math():
+    start_time = time.time()
+
     finum = float(fnum)
     snum = float(inputBox.get())
     clear_input()
@@ -99,6 +101,15 @@ def do_math():
     elif math_action == '/':
         res = finum / snum
         inputBox.insert(0, res)
+
+    status_bar["state"] = "normal"
+
+    run_time = "That calculation took %s seconds" %(time.time()-start_time)
+
+    status_bar.delete(1.0, END)
+    status_bar.insert(1.0, run_time)
+
+    status_bar["state"] = "disabled"
 
     update_history(finum, math_action, snum, res)
 
@@ -355,5 +366,9 @@ bin_value.grid(row=7, column=4, padx=pad_x, pady=pad_y, columnspan=1, rowspan=1)
 
 # </editor-fold>
 
+# Status Bar
+
+status_bar = Text(root, bd=1, relief=SUNKEN, height=1, state='disabled')
+status_bar.grid(row=8,column=0, columnspan=6, pady=pad_y, padx=pad_x)
 
 root.mainloop()

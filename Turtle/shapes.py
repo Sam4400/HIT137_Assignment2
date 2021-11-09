@@ -2,7 +2,6 @@ import turtle
 
 from random import randint
 
-
 # Returns a list with (limit) number of random hexadecimal colours
 def random_colors(limit):
     return_colors = []
@@ -29,8 +28,8 @@ def random_spiral():
     bgcolor = random_colors(1)
     t.bgcolor(bgcolor[0])
 
-    t.speed(0)
-    t.hideturtle()
+    t.speed(4)
+    #t.hideturtle()
 
     tp = t.Pen()
 
